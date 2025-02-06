@@ -1,5 +1,6 @@
 ARG POSTGRES_VERSION=alpine
-FROM postgres:${POSTGRES_VERSION}
+#FROM postgres:${POSTGRES_VERSION}
+FROM pgvector/pgvector:pg${POSTGRES_VERSION}
 
 CMD ["postgres"]
 

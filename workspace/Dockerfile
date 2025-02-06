@@ -1214,12 +1214,16 @@ RUN if [ ${INSTALL_PYTHON} = true ]; then \
 ARG INSTALL_PYTHON3=false
 
 RUN if [ ${INSTALL_PYTHON3} = true ]; then \
-  apt-get -y install python3 python3-dev build-essential  \
+  apt-get -y install python3.9 python3.9-dev python3.9-distutils \
+    build-essential pkg-config cmake libzip-dev libjpeg-dev \
   && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py  \
-  && python3 get-pip.py  \
+  && python3.9 get-pip.py  \
   && rm get-pip.py  \
-  && python3 -m pip install --upgrade --force-reinstall pip  \
-  && python3 -m pip install --upgrade virtualenv \
+  && python3.9 -m pip install --upgrade --force-reinstall pip  \
+  && python3.9 -m pip install --upgrade virtualenv \
+  && python3.9 -m pip install --upgrade requests \
+  && python3.9 -m pip install --upgrade eland \
+  && python3.9 -m pip install --upgrade 'eland[pytorch]' \
 ;fi
 
 ###########################################################################
@@ -1330,6 +1334,20 @@ RUN if [ ${INSTALL_PG_CLIENT} = true ]; then \
     && echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list \
     && apt-get update \
     && apt-get -y install postgresql-client-${PG_CLIENT_VERSION} \
+;fi
+
+###########################################################################
+# pgloader
+###########################################################################
+
+USER root
+
+ARG INSTALL_PGLOADER=false
+
+RUN if [ ${INSTALL_PGLOADER} = true ]; then \
+    # Install the pgsql client
+    apt-get update \
+    && apt-get -y install pgloader \
 ;fi
 
 ###########################################################################
@@ -1878,6 +1896,8 @@ RUN if [ ${INSTALL_GITHUB_CLI} = true ]; then \
     && apt update \
     && apt install gh -y \
 ;fi
+
+
 
 
 #

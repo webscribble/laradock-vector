@@ -131,6 +131,7 @@ services:
           - INSTALL_DUSK_DEPS=${WORKSPACE_INSTALL_DUSK_DEPS}
           - INSTALL_PG_CLIENT=${WORKSPACE_INSTALL_PG_CLIENT}
           - PG_CLIENT_VERSION=${POSTGRES_CLIENT_VERSION}
+          - INSTALL_PGLOADER=${WORKSPACE_INSTALL_PGLOADER}
           - INSTALL_PHALCON=${WORKSPACE_INSTALL_PHALCON}
           - INSTALL_SWOOLE=${WORKSPACE_INSTALL_SWOOLE}
           - INSTALL_TAINT=${WORKSPACE_INSTALL_TAINT}
@@ -660,6 +661,7 @@ services:
 ### PostgreSQL ###########################################
     postgres:
       restart: always
+      shm_size: '512m'
       build:
         context: ./postgres
         args:
@@ -1134,8 +1136,8 @@ services:
         - xpack.security.enabled=false
         - xpack.security.transport.ssl.enabled=false
         - indices.id_field_data.enabled=true
-        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-        - cluster.initial_master_nodes=laradock-node
+        - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+        - discovery.type=single-node
       ulimits:
         memlock:
           soft: -1
